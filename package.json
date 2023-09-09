@@ -1,8 +1,8 @@
 {
   "name": "productivity-api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Api for productivity app",
+  "author": "Matteo Kinkela",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -17,12 +17,13 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest.config.js"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "module-alias": "^2.2.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },
@@ -32,8 +33,9 @@
     "@nestjs/testing": "^9.0.0",
     "@types/express": "^4.17.13",
     "@types/jest": "29.5.0",
+    "@types/module-alias": "^2.0.2",
     "@types/node": "18.15.11",
-    "@types/supertest": "^2.0.11",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.0.1",
