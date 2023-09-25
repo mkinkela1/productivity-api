@@ -16,7 +16,7 @@ export class AuthController {
   @Post("/login")
   @ApiExtraModels(LoginDtoRequest)
   async login(@Request() request: Request & { user: TUser }) {
-    return request.user;
+    return this.authService.login(request.user);
   }
 
   @Post("/register")

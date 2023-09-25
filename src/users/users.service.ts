@@ -27,6 +27,10 @@ export class UsersService {
     return user;
   }
 
+  async getAll(): Promise<TUser[]> {
+    return this.userRepository.find();
+  }
+
   async create(
     email: string,
     password: string,
