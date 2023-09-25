@@ -4,7 +4,7 @@ import { AuthService } from "src/auth/auth.service";
 import { LoginDtoRequest } from "src/auth/dto/request/login.dto-request";
 import { RegisterDtoRequest } from "src/auth/dto/request/register.dto-request";
 import { LocalAuthGuard } from "src/auth/strategy/local/local.guard";
-import { TUser } from "src/entities/user.entity";
+import { TRequestUser } from "src/entities/user.entity";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -15,7 +15,7 @@ export class AuthController {
   @ApiBody({ type: LoginDtoRequest })
   @Post("/login")
   @ApiExtraModels(LoginDtoRequest)
-  async login(@Request() request: Request & { user: TUser }) {
+  async login(@Request() request: TRequestUser) {
     return this.authService.login(request.user);
   }
 
