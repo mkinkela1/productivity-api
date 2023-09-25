@@ -4,7 +4,9 @@ import { AppModule } from "src/app.module";
 import "src/config/aliases";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ["error", "warn", "debug", "verbose"],
+  });
 
   const config = new DocumentBuilder()
     .setTitle("Productivity app API")

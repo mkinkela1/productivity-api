@@ -1,3 +1,4 @@
+import { IsDate } from "class-validator";
 import {
   AfterInsert,
   AfterUpdate,
@@ -12,24 +13,25 @@ export abstract class BaseGlobalEntity {
   id: string;
 
   @BeforeInsert()
-  addId() {
+  private addId() {
     this.id = uuid();
   }
 
-  @Column({ name: "updated_at" })
-  updatedAt: Date;
+  @Column({ name: "updated_at", nullable: true })
+  @IsDate()
+  updatedAt?: Date;
 
   @AfterUpdate()
-  setUpdatedAt() {
+  private setUpdatedAt() {
     this.updatedAt = new Date();
   }
 
   createDateTime: Date;
   @AfterInsert()
-  getDateTime() {
+  private getDateTime() {
     this.createDateTime = new Date(timestamp(this.id));
   }
 
-  @Column()
-  comment: string;
+  @Column({ type: "text", nullable: true })
+  comment?: string;
 }
