@@ -8,7 +8,7 @@ import { TUser, User } from "src/entities/user.entity";
 import {
   EmailAlreadyExistsException,
   UserNotFoundException,
-} from "src/exceptions/UserExceptions";
+} from "src/exceptions/user.exceptions";
 import { SALT_ROUNDS, USERS_REPOSITORY } from "src/utils/constants";
 import { Repository } from "typeorm/repository/Repository";
 

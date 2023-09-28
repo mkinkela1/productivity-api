@@ -10,7 +10,12 @@ export const UserNotFound: Message = {
   [Language.HR]: "Korisnik nije pronađen.",
 };
 
-export const EmailAlreadyExists: Record<Language, string> = {
+export const EmailAlreadyExists: Message = {
   [Language.EN]: "Email already exists.",
   [Language.HR]: "E-mail već postoji.",
+};
+
+export const EventCategoryNotFound: Message = {
+  [Language.EN]: "Event category not found.",
+  [Language.HR]: "Kategorija događaja nije pronađena.",
 };

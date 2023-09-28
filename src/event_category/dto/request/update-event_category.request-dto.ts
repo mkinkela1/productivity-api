@@ -1,6 +1,12 @@
-import { PartialType } from "@nestjs/swagger";
-import { CreateEventCategoryRequestDto } from "src/event_category/dto/request/create-event_category.request-dto";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsHexColor, IsString } from "class-validator";
 
-export class UpdateEventCategoryRequestDto extends PartialType(
-  CreateEventCategoryRequestDto,
-) {}
+export class UpdateEventCategoryRequestDto {
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsHexColor()
+  colorHex: string;
+}

@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 import { compare } from "bcrypt";
 import { RegisterDtoRequest } from "src/auth/dto/request/register.dto-request";
 import { TUser } from "src/entities/user.entity";
-import { UserNotFoundException } from "src/exceptions/UserExceptions";
+import { UserNotFoundException } from "src/exceptions/user.exceptions";
 import { UsersService } from "src/users/users.service";
 
 @Injectable()

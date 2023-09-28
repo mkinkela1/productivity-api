@@ -11,7 +11,7 @@ export class EventCategory extends BaseGlobalEntity {
   @Column({ nullable: false, length: 255 })
   colorHex: string;
 
-  @ManyToOne(() => User, (user) => user.eventCategories)
+  @ManyToOne(() => User, (user) => user.eventCategories, { eager: true })
   user: User;
 }
 

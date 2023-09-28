@@ -14,7 +14,7 @@ import { UsersModule } from "src/users/users.module";
     PassportModule,
     JwtModule.register({
       secret: configService.getJwtTokenSecret(),
-      signOptions: { expiresIn: "5m" },
+      signOptions: { expiresIn: configService.getJwtTokenDuration() },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
