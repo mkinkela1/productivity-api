@@ -1,6 +1,6 @@
 import { config } from "dotenv";
+import { DATA_SOURCE } from "src/common/constants";
 import { configService } from "src/config/config.service";
-import { DATA_SOURCE } from "src/utils/constants";
 import { DataSource } from "typeorm";
 
 config();

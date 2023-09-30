@@ -1,6 +1,6 @@
+import { type TWithoutFunctions } from "src/common/typeWithoutFunctions";
 import { BaseGlobalEntity } from "src/entities/base.global-entity";
 import { User } from "src/entities/user.entity";
-import { type TWithoutFunctions } from "src/utils/typeWithoutFunctions";
 import { Column, Entity, ManyToOne } from "typeorm";
 
 @Entity({ name: "event_category" })

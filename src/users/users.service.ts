@@ -4,12 +4,12 @@ import {
   InternalServerErrorException,
 } from "@nestjs/common";
 import { hash } from "bcrypt";
+import { SALT_ROUNDS, USERS_REPOSITORY } from "src/common/constants";
 import { TUser, User } from "src/entities/user.entity";
 import {
   EmailAlreadyExistsException,
   UserNotFoundException,
 } from "src/exceptions/user.exceptions";
-import { SALT_ROUNDS, USERS_REPOSITORY } from "src/utils/constants";
 import { Repository } from "typeorm/repository/Repository";
 
 @Injectable()

@@ -1,26 +1,16 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { User } from "src/entities/user.entity";
+import { EVENT_CATEGORY_REPOSITORY } from "src/common/constants";
 import { CreateEventCategoryRequestDto } from "src/event_category/dto/request/create-event_category.request-dto";
 import { UpdateEventCategoryRequestDto } from "src/event_category/dto/request/update-event_category.request-dto";
 import { EventCategoryResponseDto } from "src/event_category/dto/response/event_category.response-dto";
 import { EventCategoryMapper } from "src/event_category/event_category.mapper";
 import { IEventCategoryRepository } from "src/event_category/event_category.repository";
-import { EventCategoryNotFoundException } from "src/exceptions/event_category.exceptions";
-import {
-  EVENT_CATEGORY_REPOSITORY,
-  USERS_REPOSITORY,
-} from "src/utils/constants";
-import { Repository } from "typeorm";
-import { isNullOrUndefined } from "../utils/helpers";
 
 @Injectable()
 export class EventCategoryService {
   constructor(
     @Inject(EVENT_CATEGORY_REPOSITORY)
     private eventCategoryRepository: IEventCategoryRepository,
-
-    @Inject(USERS_REPOSITORY)
-    private userRepository: Repository<User>,
 
     private mapper: EventCategoryMapper,
   ) {}
@@ -67,23 +57,15 @@ export class EventCategoryService {
       userId,
     );
 
-    const newEventCategory = { ...eventCategory, ...dto };
+    const obj = { ...eventCategory, ...dto };
 
-    const updatedEventCategory = await this.eventCategoryRepository.save(
-      newEventCategory,
-    );
+    const updatedEventCategory = await this.eventCategoryRepository.save(obj);
 
     return this.mapper.toDtoEventCategoryResponse(updatedEventCategory);
   }
 
   async remove(id: string, userId: string) {
-    const eventCategory = await this.eventCategoryRepository.expectOne(
-      id,
-      userId,
-    );
-
-    if (isNullOrUndefined(eventCategory))
-      throw new EventCategoryNotFoundException();
+    await this.eventCategoryRepository.expectOne(id, userId);
 
     return await this.eventCategoryRepository.delete({
       id,

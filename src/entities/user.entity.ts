@@ -1,6 +1,7 @@
+import { type TWithoutFunctions } from "src/common/typeWithoutFunctions";
 import { BaseGlobalEntity } from "src/entities/base.global-entity";
 import { EventCategory } from "src/entities/event_category.entity";
-import { type TWithoutFunctions } from "src/utils/typeWithoutFunctions";
+import { Note } from "src/entities/note.entity";
 import { Column, Entity, OneToMany } from "typeorm";
 
 @Entity({ name: "user" })
@@ -22,6 +23,9 @@ export class User extends BaseGlobalEntity {
     (eventCategory: EventCategory) => eventCategory.user,
   )
   eventCategories: EventCategory[];
+
+  @OneToMany(() => Note, (note: Note) => note.user)
+  notes: Note[];
 }
 
 export type TUser = Omit<TWithoutFunctions<User>, "password">;

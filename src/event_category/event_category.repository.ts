@@ -1,6 +1,6 @@
+import { isNullOrUndefined } from "src/common/helpers";
 import { EventCategory } from "src/entities/event_category.entity";
 import { EventCategoryNotFoundException } from "src/exceptions/event_category.exceptions";
-import { isNullOrUndefined } from "src/utils/helpers";
 import { Repository } from "typeorm";
 
 export interface IEventCategoryRepository extends Repository<EventCategory> {

@@ -19,3 +19,8 @@ export const EventCategoryNotFound: Message = {
   [Language.EN]: "Event category not found.",
   [Language.HR]: "Kategorija događaja nije pronađena.",
 };
+
+export const NoteNotFound: Message = {
+  [Language.EN]: "Note not found.",
+  [Language.HR]: "Bilješka nije pronađena.",
+};

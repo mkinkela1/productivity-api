@@ -7,7 +7,6 @@ import {
   Param,
   Patch,
   Post,
-  Request,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -18,57 +17,47 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/strategy/jwt/jwt-auth.guard";
-import { TRequestUser } from "src/entities/user.entity";
+import { CurrentUser } from "src/common/decorators/current-user.decorator";
+import { TUser } from "src/entities/user.entity";
 import { CreateEventCategoryRequestDto } from "src/event_category/dto/request/create-event_category.request-dto";
 import { UpdateEventCategoryRequestDto } from "src/event_category/dto/request/update-event_category.request-dto";
 import { EventCategoryResponseDto } from "src/event_category/dto/response/event_category.response-dto";
 import { EventCategoryService } from "src/event_category/event_category.service";
 
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags("events")
 @Controller("event-category")
 export class EventCategoryController {
   constructor(private readonly eventCategoryService: EventCategoryService) {}
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiCreatedResponse({ type: EventCategoryResponseDto })
   create(
-    @Request() request: TRequestUser,
+    @CurrentUser() user: TUser,
     @Body() createEventCategoryDto: CreateEventCategoryRequestDto,
   ): Promise<EventCategoryResponseDto> {
-    return this.eventCategoryService.create(
-      request.user.id,
-      createEventCategoryDto,
-    );
+    return this.eventCategoryService.create(user.id, createEventCategoryDto);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOkResponse({
     type: EventCategoryResponseDto,
     isArray: true,
   })
-  findAll(
-    @Request() request: TRequestUser,
-  ): Promise<EventCategoryResponseDto[]> {
-    return this.eventCategoryService.findAll(request.user.id);
+  findAll(@CurrentUser() user: TUser): Promise<EventCategoryResponseDto[]> {
+    return this.eventCategoryService.findAll(user.id);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({
     type: EventCategoryResponseDto,
   })
   @ApiNotFoundResponse()
   @Get(":id")
-  findOne(@Param("id") id: string, @Request() request: TRequestUser) {
-    return this.eventCategoryService.findOne(id, request.user.id);
+  findOne(@Param("id") id: string, @CurrentUser() user: TUser) {
+    return this.eventCategoryService.findOne(id, user.id);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({
     type: EventCategoryResponseDto,
   })
@@ -77,21 +66,19 @@ export class EventCategoryController {
   update(
     @Param("id") id: string,
     @Body() updateEventCategoryDto: UpdateEventCategoryRequestDto,
-    @Request() request: TRequestUser,
+    @CurrentUser() user: TUser,
   ): Promise<EventCategoryResponseDto> {
     return this.eventCategoryService.update(
       id,
       updateEventCategoryDto,
-      request.user.id,
+      user.id,
     );
   }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @ApiNotFoundResponse()
   @Delete(":id")
   @HttpCode(204)
-  remove(@Param("id") id: string, @Request() request: TRequestUser) {
-    return this.eventCategoryService.remove(id, request.user.id);
+  remove(@Param("id") id: string, @CurrentUser() user: TUser) {
+    return this.eventCategoryService.remove(id, user.id);
   }
 }

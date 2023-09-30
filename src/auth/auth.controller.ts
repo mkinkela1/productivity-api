@@ -1,10 +1,18 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
-import { ApiBody, ApiExtraModels, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import {
+  ApiBody,
+  ApiExtraModels,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
+import { ApiBearerAuth } from "@nestjs/swagger/dist/decorators/api-bearer.decorator";
 import { AuthService } from "src/auth/auth.service";
 import { LoginDtoRequest } from "src/auth/dto/request/login.dto-request";
 import { RegisterDtoRequest } from "src/auth/dto/request/register.dto-request";
+import { JwtAuthGuard } from "src/auth/strategy/jwt/jwt-auth.guard";
 import { LocalAuthGuard } from "src/auth/strategy/local/local.guard";
-import { TRequestUser } from "src/entities/user.entity";
+import { CurrentUser } from "src/common/decorators/current-user.decorator";
+import { TUser } from "src/entities/user.entity";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -15,12 +23,20 @@ export class AuthController {
   @ApiBody({ type: LoginDtoRequest })
   @Post("/login")
   @ApiExtraModels(LoginDtoRequest)
-  async login(@Request() request: TRequestUser) {
-    return this.authService.login(request.user);
+  async login(@CurrentUser() user: TUser) {
+    return this.authService.login(user);
   }
 
   @Post("/register")
   async register(@Body() body: RegisterDtoRequest) {
     return this.authService.register(body);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get("/me")
+  @ApiUnauthorizedResponse()
+  getLoggedInUser(@CurrentUser() user: TUser): TUser {
+    return user;
   }
 }

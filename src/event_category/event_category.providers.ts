@@ -1,6 +1,6 @@
+import { DATA_SOURCE, EVENT_CATEGORY_REPOSITORY } from "src/common/constants";
 import { EventCategory } from "src/entities/event_category.entity";
 import { customEventCategoryRepository } from "src/event_category/event_category.repository";
-import { DATA_SOURCE, EVENT_CATEGORY_REPOSITORY } from "src/utils/constants";
 import { DataSource } from "typeorm";
 
 export const eventCategoryProvider = [
