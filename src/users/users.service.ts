@@ -1,56 +1,16 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from "@nestjs/common";
-import { hash } from "bcrypt";
-import { SALT_ROUNDS, USERS_REPOSITORY } from "src/common/constants";
-import { TUser, User } from "src/entities/user.entity";
-import {
-  EmailAlreadyExistsException,
-  UserNotFoundException,
-} from "src/exceptions/user.exceptions";
-import { Repository } from "typeorm/repository/Repository";
+import { Inject, Injectable } from "@nestjs/common";
+import { USERS_REPOSITORY } from "src/common/constants";
+import { TUser } from "src/entities/user.entity";
+import { IUserRepository } from "src/users/users.repository";
 
 @Injectable()
 export class UsersService {
   constructor(
     @Inject(USERS_REPOSITORY)
-    private userRepository: Repository<User>,
+    private userRepository: IUserRepository,
   ) {}
-
-  async expectOneByEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { email } });
-
-    if (!user) throw new UserNotFoundException();
-
-    return user;
-  }
 
   async getAll(): Promise<TUser[]> {
     return this.userRepository.find();
-  }
-
-  async create(
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-  ): Promise<TUser> {
-    const hashedPassword = await hash(password, SALT_ROUNDS);
-
-    const user = this.userRepository.create({
-      email,
-      firstName,
-      lastName,
-      password: hashedPassword,
-    });
-
-    try {
-      return await this.userRepository.save(user);
-    } catch (e) {
-      if (e.code === "23505") throw new EmailAlreadyExistsException();
-      else new InternalServerErrorException(e);
-    }
   }
 }

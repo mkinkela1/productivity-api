@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import {
   ApiBody,
+  ApiCreatedResponse,
   ApiExtraModels,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -9,6 +10,7 @@ import { ApiBearerAuth } from "@nestjs/swagger/dist/decorators/api-bearer.decora
 import { AuthService } from "src/auth/auth.service";
 import { LoginDtoRequest } from "src/auth/dto/request/login.dto-request";
 import { RegisterDtoRequest } from "src/auth/dto/request/register.dto-request";
+import { LoginResponseDto } from "src/auth/dto/response/login.response-dto";
 import { JwtAuthGuard } from "src/auth/strategy/jwt/jwt-auth.guard";
 import { LocalAuthGuard } from "src/auth/strategy/local/local.guard";
 import { CurrentUser } from "src/common/decorators/current-user.decorator";
@@ -23,7 +25,8 @@ export class AuthController {
   @ApiBody({ type: LoginDtoRequest })
   @Post("/login")
   @ApiExtraModels(LoginDtoRequest)
-  async login(@CurrentUser() user: TUser) {
+  @ApiCreatedResponse({ type: LoginResponseDto })
+  async login(@CurrentUser() user: TUser): Promise<LoginResponseDto> {
     return this.authService.login(user);
   }
 

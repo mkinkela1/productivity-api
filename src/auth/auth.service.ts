@@ -1,21 +1,35 @@
-import { Injectable } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { compare } from "bcrypt";
+import { compare, hash } from "bcrypt";
+import { AuthMapper } from "src/auth/auth.mapper";
 import { RegisterDtoRequest } from "src/auth/dto/request/register.dto-request";
+import { LoginResponseDto } from "src/auth/dto/response/login.response-dto";
+import { RegisterResponseDto } from "src/auth/dto/response/register.response-dto";
+import { SALT_ROUNDS, USERS_REPOSITORY } from "src/common/constants";
+import { configService } from "src/config/config.service";
 import { TUser } from "src/entities/user.entity";
-import { UserNotFoundException } from "src/exceptions/user.exceptions";
-import { UsersService } from "src/users/users.service";
+import {
+  EmailAlreadyExistsException,
+  UserNotFoundException,
+} from "src/exceptions/user.exceptions";
+import { IUserRepository } from "src/users/users.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    @Inject(USERS_REPOSITORY)
+    private userRepository: IUserRepository,
     private jwtService: JwtService,
+    private mapper: AuthMapper,
   ) {}
 
   async validateUser(email: string, password: string): Promise<TUser> {
     const { password: hashedPassword, ...user } =
-      await this.usersService.expectOneByEmail(email);
+      await this.userRepository.expectOneByEmail(email);
 
     const match = await compare(password, hashedPassword);
 
@@ -24,18 +38,39 @@ export class AuthService {
     throw new UserNotFoundException();
   }
 
-  async login(user: TUser) {
+  async login(user: TUser): Promise<LoginResponseDto> {
     const payload = { id: user.id };
 
-    return {
-      access_token: this.jwtService.sign(payload),
-      refresh_token: this.jwtService.sign(payload, {
-        expiresIn: "24h",
-      }),
-    };
+    const accessToken = await this.jwtService.signAsync(payload);
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: configService.getJwtRefreshTokenDuration(),
+    });
+
+    return this.mapper.toLoginResponseDto(user, accessToken, refreshToken);
   }
 
-  async register({ email, password, firstName, lastName }: RegisterDtoRequest) {
-    return this.usersService.create(email, password, firstName, lastName);
+  async register({
+    email,
+    password,
+    firstName,
+    lastName,
+  }: RegisterDtoRequest): Promise<RegisterResponseDto> {
+    const hashedPassword = await hash(password, SALT_ROUNDS);
+
+    const user = this.userRepository.create({
+      email,
+      firstName,
+      lastName,
+      password: hashedPassword,
+    });
+
+    try {
+      const savedUser = await this.userRepository.save(user);
+
+      return this.mapper.toRegisterResponseDto(savedUser);
+    } catch (e) {
+      if (e.code === "23505") throw new EmailAlreadyExistsException();
+      else new InternalServerErrorException(e);
+    }
   }
 }
