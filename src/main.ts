@@ -6,6 +6,10 @@ import "src/config/aliases";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ["error", "warn", "debug", "verbose"],
+    cors: {
+      origin: "http://localhost:5173",
+      credentials: true,
+    },
   });
 
   const config = new DocumentBuilder()

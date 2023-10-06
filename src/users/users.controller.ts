@@ -11,7 +11,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  async getAll() {
+  async getUsersPaginated() {
     return this.usersService.getAll();
   }
 }

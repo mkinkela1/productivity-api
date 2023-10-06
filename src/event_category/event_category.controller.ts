@@ -17,8 +17,10 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/strategy/jwt/jwt-auth.guard";
-import { CurrentUser } from "src/common/decorators/current-user.decorator";
-import { TUser } from "src/entities/user.entity";
+import {
+  CurrentUser,
+  TCurrentUser,
+} from "src/common/decorators/current-user.decorator";
 import { CreateEventCategoryRequestDto } from "src/event_category/dto/request/create-event_category.request-dto";
 import { UpdateEventCategoryRequestDto } from "src/event_category/dto/request/update-event_category.request-dto";
 import { EventCategoryResponseDto } from "src/event_category/dto/response/event_category.response-dto";
@@ -33,8 +35,8 @@ export class EventCategoryController {
 
   @Post()
   @ApiCreatedResponse({ type: EventCategoryResponseDto })
-  create(
-    @CurrentUser() user: TUser,
+  createEventCategory(
+    @CurrentUser() user: TCurrentUser,
     @Body() createEventCategoryDto: CreateEventCategoryRequestDto,
   ): Promise<EventCategoryResponseDto> {
     return this.eventCategoryService.create(user.id, createEventCategoryDto);
@@ -45,7 +47,9 @@ export class EventCategoryController {
     type: EventCategoryResponseDto,
     isArray: true,
   })
-  findAll(@CurrentUser() user: TUser): Promise<EventCategoryResponseDto[]> {
+  getEventCategoriesPaginated(
+    @CurrentUser() user: TCurrentUser,
+  ): Promise<EventCategoryResponseDto[]> {
     return this.eventCategoryService.findAll(user.id);
   }
 
@@ -54,7 +58,7 @@ export class EventCategoryController {
   })
   @ApiNotFoundResponse()
   @Get(":id")
-  findOne(@Param("id") id: string, @CurrentUser() user: TUser) {
+  getEventCategory(@Param("id") id: string, @CurrentUser() user: TCurrentUser) {
     return this.eventCategoryService.findOne(id, user.id);
   }
 
@@ -63,10 +67,10 @@ export class EventCategoryController {
   })
   @ApiNotFoundResponse()
   @Patch(":id")
-  update(
+  updateEventCategory(
     @Param("id") id: string,
     @Body() updateEventCategoryDto: UpdateEventCategoryRequestDto,
-    @CurrentUser() user: TUser,
+    @CurrentUser() user: TCurrentUser,
   ): Promise<EventCategoryResponseDto> {
     return this.eventCategoryService.update(
       id,
@@ -78,7 +82,10 @@ export class EventCategoryController {
   @ApiNotFoundResponse()
   @Delete(":id")
   @HttpCode(204)
-  remove(@Param("id") id: string, @CurrentUser() user: TUser) {
+  removeEventCategory(
+    @Param("id") id: string,
+    @CurrentUser() user: TCurrentUser,
+  ) {
     return this.eventCategoryService.remove(id, user.id);
   }
 }

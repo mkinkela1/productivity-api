@@ -17,8 +17,10 @@ import {
   ApiOkResponse,
 } from "@nestjs/swagger/dist/decorators/api-response.decorator";
 import { JwtAuthGuard } from "src/auth/strategy/jwt/jwt-auth.guard";
-import { CurrentUser } from "src/common/decorators/current-user.decorator";
-import { TUser } from "src/entities/user.entity";
+import {
+  CurrentUser,
+  TCurrentUser,
+} from "src/common/decorators/current-user.decorator";
 import { CreateNoteDto } from "src/note/dto/request/create-note.dto";
 import { UpdateNoteDto } from "src/note/dto/request/update-note.dto";
 import { NoteResponseDto } from "src/note/dto/response/note.response-dto";
@@ -33,8 +35,8 @@ export class NoteController {
 
   @Post()
   @ApiCreatedResponse({ type: NoteResponseDto })
-  create(
-    @CurrentUser() user: TUser,
+  createNote(
+    @CurrentUser() user: TCurrentUser,
     @Body() createNoteDto: CreateNoteDto,
   ): Promise<NoteResponseDto> {
     return this.noteService.create(createNoteDto, user.id);
@@ -45,7 +47,9 @@ export class NoteController {
     type: NoteResponseDto,
     isArray: true,
   })
-  findAll(@CurrentUser() user: TUser): Promise<NoteResponseDto[]> {
+  getNotesPaginated(
+    @CurrentUser() user: TCurrentUser,
+  ): Promise<NoteResponseDto[]> {
     return this.noteService.findAll(user.id);
   }
 
@@ -54,9 +58,9 @@ export class NoteController {
   })
   @ApiNotFoundResponse()
   @Get(":id")
-  findOne(
+  getNote(
     @Param("id") id: string,
-    @CurrentUser() user: TUser,
+    @CurrentUser() user: TCurrentUser,
   ): Promise<NoteResponseDto> {
     return this.noteService.findOne(id, user.id);
   }
@@ -66,10 +70,10 @@ export class NoteController {
   })
   @ApiNotFoundResponse()
   @Patch(":id")
-  update(
+  updateNote(
     @Param("id") id: string,
     @Body() updateNoteDto: UpdateNoteDto,
-    @CurrentUser() user: TUser,
+    @CurrentUser() user: TCurrentUser,
   ): Promise<NoteResponseDto> {
     return this.noteService.update(id, updateNoteDto, user.id);
   }
@@ -77,7 +81,7 @@ export class NoteController {
   @ApiNotFoundResponse()
   @Delete(":id")
   @HttpCode(204)
-  remove(@Param("id") id: string, @CurrentUser() user: TUser) {
+  removeNote(@Param("id") id: string, @CurrentUser() user: TCurrentUser) {
     return this.noteService.remove(id, user.id);
   }
 }

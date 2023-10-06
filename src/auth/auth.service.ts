@@ -10,6 +10,7 @@ import { RegisterDtoRequest } from "src/auth/dto/request/register.dto-request";
 import { LoginResponseDto } from "src/auth/dto/response/login.response-dto";
 import { RegisterResponseDto } from "src/auth/dto/response/register.response-dto";
 import { SALT_ROUNDS, USERS_REPOSITORY } from "src/common/constants";
+import { TCurrentUser } from "src/common/decorators/current-user.decorator";
 import { configService } from "src/config/config.service";
 import { TUser } from "src/entities/user.entity";
 import {
@@ -72,5 +73,9 @@ export class AuthService {
       if (e.code === "23505") throw new EmailAlreadyExistsException();
       else new InternalServerErrorException(e);
     }
+  }
+
+  getLoggedInUser({ id }: TCurrentUser) {
+    return this.mapper.toLoggedInUser({ id });
   }
 }
