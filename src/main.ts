@@ -12,6 +12,8 @@ async function bootstrap() {
     },
   });
 
+  app.setGlobalPrefix("api");
+
   const config = new DocumentBuilder()
     .setTitle("Productivity app API")
     .setVersion("1.0")

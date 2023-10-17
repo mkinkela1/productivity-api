@@ -1,8 +1,8 @@
 import { ApiResponseProperty } from "@nestjs/swagger";
 
-export class LoggedInUserResponseDto {
+export class GetUsersPaginatedResponseDto {
   @ApiResponseProperty()
-  id: string;
+  email: string;
 
   @ApiResponseProperty()
   firstName: string;
@@ -10,7 +10,7 @@ export class LoggedInUserResponseDto {
   @ApiResponseProperty()
   lastName: string;
 
-  constructor(obj: LoggedInUserResponseDto) {
-    Object.assign(this, obj);
+  constructor(partial: Partial<GetUsersPaginatedResponseDto>) {
+    Object.assign(this, partial);
   }
 }

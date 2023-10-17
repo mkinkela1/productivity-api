@@ -1,7 +1,6 @@
 import { LoggedInUserResponseDto } from "src/auth/dto/response/logged-in-user.response-dto";
 import { LoginResponseDto } from "src/auth/dto/response/login.response-dto";
 import { RegisterResponseDto } from "src/auth/dto/response/register.response-dto";
-import { TCurrentUser } from "src/common/decorators/current-user.decorator";
 import { TUser } from "src/entities/user.entity";
 
 export class AuthMapper {
@@ -26,7 +25,7 @@ export class AuthMapper {
     });
   }
 
-  toLoggedInUser({ id }: TCurrentUser) {
-    return new LoggedInUserResponseDto({ id });
+  toLoggedInUser({ id, firstName, lastName }: TUser) {
+    return new LoggedInUserResponseDto({ id, firstName, lastName });
   }
 }

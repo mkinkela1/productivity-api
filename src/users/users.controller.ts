@@ -1,6 +1,7 @@
 import { Controller, Get, UseGuards } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/strategy/jwt/jwt-auth.guard";
+import { GetUsersPaginatedResponseDto } from "src/users/dto/response/get-users-paginated.response-dto";
 import { UsersService } from "src/users/users.service";
 
 @ApiBearerAuth()
@@ -11,7 +12,10 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
+  @ApiOkResponse({ type: [GetUsersPaginatedResponseDto] })
   async getUsersPaginated() {
-    return this.usersService.getAll();
+    const users = await this.usersService.getAll();
+
+    return users.map((user) => new GetUsersPaginatedResponseDto(user));
   }
 }

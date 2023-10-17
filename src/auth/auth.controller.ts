@@ -11,9 +11,11 @@ import {
 import { ApiBearerAuth } from "@nestjs/swagger/dist/decorators/api-bearer.decorator";
 import { AuthService } from "src/auth/auth.service";
 import { LoginDtoRequest } from "src/auth/dto/request/login.dto-request";
+import { RefreshTokenDtoRequest } from "src/auth/dto/request/refresh-token.dto-request";
 import { RegisterDtoRequest } from "src/auth/dto/request/register.dto-request";
 import { LoggedInUserResponseDto } from "src/auth/dto/response/logged-in-user.response-dto";
 import { LoginResponseDto } from "src/auth/dto/response/login.response-dto";
+import { RefreshTokenResponseDto } from "src/auth/dto/response/refresh-token.response-dto";
 import { RegisterResponseDto } from "src/auth/dto/response/register.response-dto";
 import { JwtAuthGuard } from "src/auth/strategy/jwt/jwt-auth.guard";
 import { LocalAuthGuard } from "src/auth/strategy/local/local.guard";
@@ -52,7 +54,18 @@ export class AuthController {
   @Get("/me")
   @ApiOkResponse({ type: LoggedInUserResponseDto })
   @ApiUnauthorizedResponse()
-  getLoggedInUser(@CurrentUser() user: TCurrentUser): LoggedInUserResponseDto {
+  getLoggedInUser(
+    @CurrentUser() user: TCurrentUser,
+  ): Promise<LoggedInUserResponseDto> {
     return this.authService.getLoggedInUser(user);
+  }
+
+  @Post("/refresh-token")
+  @ApiCreatedResponse({ type: RefreshTokenResponseDto })
+  @ApiUnauthorizedResponse()
+  async refreshToken(
+    @Body() body: RefreshTokenDtoRequest,
+  ): Promise<RefreshTokenResponseDto> {
+    return this.authService.refreshToken(body);
   }
 }
