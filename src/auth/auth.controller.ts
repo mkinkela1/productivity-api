@@ -11,6 +11,7 @@ import {
 import { ApiBearerAuth } from "@nestjs/swagger/dist/decorators/api-bearer.decorator";
 import { AuthService } from "src/auth/auth.service";
 import { LoginDtoRequest } from "src/auth/dto/request/login.dto-request";
+import { LogoutDtoRequest } from "src/auth/dto/request/logout.dto-request";
 import { RefreshTokenDtoRequest } from "src/auth/dto/request/refresh-token.dto-request";
 import { RegisterDtoRequest } from "src/auth/dto/request/register.dto-request";
 import { LoggedInUserResponseDto } from "src/auth/dto/response/logged-in-user.response-dto";
@@ -67,5 +68,14 @@ export class AuthController {
     @Body() body: RefreshTokenDtoRequest,
   ): Promise<RefreshTokenResponseDto> {
     return this.authService.refreshToken(body);
+  }
+
+  @Post("/logout")
+  @ApiBody({ type: LogoutDtoRequest })
+  @ApiExtraModels(LogoutDtoRequest)
+  @ApiCreatedResponse()
+  @ApiUnauthorizedResponse()
+  async logout(@Body() body: LogoutDtoRequest): Promise<void> {
+    return this.authService.logout(body);
   }
 }

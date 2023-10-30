@@ -48,7 +48,7 @@ export class NoteService {
     updateNoteDto: UpdateNoteDto,
     userId: string,
   ): Promise<NoteResponseDto> {
-    const note = this.noteRepository.expectOne(id, userId);
+    const note = await this.noteRepository.expectOne(id, userId);
 
     const obj = { ...note, ...updateNoteDto };
 
@@ -58,7 +58,7 @@ export class NoteService {
   }
 
   async remove(id: string, userId: string) {
-    this.noteRepository.expectOne(id, userId);
+    await this.noteRepository.expectOne(id, userId);
 
     return await this.noteRepository.delete({ id, user: { id: userId } });
   }

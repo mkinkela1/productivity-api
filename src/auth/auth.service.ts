@@ -8,6 +8,7 @@ import { compare, hash } from "bcrypt";
 import jwtDecode from "jwt-decode";
 import { AuthMapper } from "src/auth/auth.mapper";
 import { JwtPayload } from "src/auth/dto/jwt-payload";
+import { LogoutDtoRequest } from "src/auth/dto/request/logout.dto-request";
 import { RefreshTokenDtoRequest } from "src/auth/dto/request/refresh-token.dto-request";
 import { RegisterDtoRequest } from "src/auth/dto/request/register.dto-request";
 import { LoginResponseDto } from "src/auth/dto/response/login.response-dto";
@@ -110,6 +111,13 @@ export class AuthService {
     } catch {
       throw new UserNotFoundException();
     }
+  }
+
+  async logout({ accessToken, refreshToken }: LogoutDtoRequest): Promise<void> {
+    // TODO: verify access token
+    // TODO: if access token is valid, save to redis blacklist
+    // TODO: verify refresh token
+    // TODO: if refresh token is valid, save to redis blacklist
   }
 
   async getAccessToken(payload: JwtPayload): Promise<string> {
